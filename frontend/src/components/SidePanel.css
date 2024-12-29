@@ -1,0 +1,14 @@
+.sidepanel {
+  padding: 0.75rem;
+}
+
+.sidepanel-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.sidepanel-item {
+  border-bottom: 1px solid rgba(204, 204, 204, 0.5);
+}

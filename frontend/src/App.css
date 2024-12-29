@@ -1,0 +1,50 @@
+.App {
+  /* width: 80%;
+  max-width: 1200px;
+  margin: 0 auto; */
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) 3fr;
+  height: 100%;
+}
+
+.main {
+  background-color: rgb(20, 20, 20);
+}
+
+.audio-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem 0 2rem 0;
+}
+/* Container for all lines */
+.lines-container {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column for rows */
+  gap: 10px; /* Space between rows */
+}
+
+/* Each line row */
+.line-row {
+  display: grid;
+  grid-template-columns: minmax(0, 100px) minmax(0, 100px) 3fr; /* Adjust column widths */
+  align-items: center; /* Vertically align items */
+  border-bottom: 1px solid #ccc; /* Optional: Row separator */
+  padding: 10px;
+  gap: 0.5rem;
+}
+.line-row.highlight {
+  background-color: rgba(36, 36, 36);
+}
+/* Time column */
+.line-time {
+  font-weight: bold;
+  /* color: #555; */
+  padding-right: 10px; /* Space between columns */
+}
+
+/* Text column */
+.highlight .line-text {
+  color: #459fff;
+}
