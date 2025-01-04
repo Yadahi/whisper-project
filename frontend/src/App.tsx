@@ -11,7 +11,9 @@ const App = () => {
   const [audioUrl, setAudioUrl] = useState("");
   const [output, setOutput] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const audioPlayerRef = useRef(null);
+  const formRef = useRef(null);
 
   useEffect(() => {
     const socket = openSocket("http://localhost:3000");
@@ -57,7 +59,13 @@ const App = () => {
       })
       .then((data) => {
         setLoading(false);
-        return data;
+        setRefreshFlag((prev) => !prev);
+
+        if (formRef.current) {
+          formRef.current.reset();
+        }
+        setFile({});
+        setAudioUrl("");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -75,7 +83,7 @@ const App = () => {
   return (
     <div className="App">
       <TimeProvider>
-        <SidePanel />
+        <SidePanel refreshFlag={refreshFlag} />
         <div className="main">
           <AudioPlayer
             audioUrl={audioUrl}
@@ -84,7 +92,7 @@ const App = () => {
           />
 
           {loading && <div>LOADING</div>}
-          <form onSubmit={submitHandler}>
+          <form ref={formRef} onSubmit={submitHandler}>
             <label htmlFor="title">Title</label>
             <input type="text" id="title" name="title" />
             <label htmlFor="audio-input"></label>

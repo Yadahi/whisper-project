@@ -7,6 +7,10 @@ router.post("/", fileUpload.single("audio"), transcriptionController.postFile);
 
 router.get("/", transcriptionController.getTranscription);
 
-router.get("/history", transcriptionController.getHistory);
+router.get("/all", transcriptionController.getAllTranscriptions);
+
+router.get("/:pid", transcriptionController.getTranscriptionById);
+
+router.delete("/:pid", transcriptionController.deleteTranscription);
 
 module.exports = router;

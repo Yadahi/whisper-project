@@ -9,7 +9,6 @@ const transcriptionRoutes = require("./routes/transcription-routes");
 
 const app = express();
 const server = createServer(app);
-const port = 3000;
 const io = socket.init(server);
 
 app.use((req, res, next) => {
@@ -28,14 +27,4 @@ io.on("connection", (socket) => {
   console.log("a user connected");
 });
 
-// server.listen(port, () => {
-//   console.log(`example app listening on port ${port}`);
-// });
-// mongoConnect((client) => {
-//   console.log(client);
-
-//   server.listen(port, () => {
-//     console.log(`example app listening on port ${port}`);
-//   });
-// });
 runServer(server).catch(console.dir);

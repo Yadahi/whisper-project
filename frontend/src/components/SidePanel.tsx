@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import "./SidePanel.css";
+import SideItem from "./SideItem";
 
-const SidePanel = () => {
-  const [history, setHistory] = useState([]);
+const SidePanel = ({ refreshFlag }) => {
+  const [audioUploads, setAudioUploads] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/history")
+    fetch("http://localhost:3000/all")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch history");
@@ -13,23 +14,30 @@ const SidePanel = () => {
         return response.json();
       })
       .then((data) => {
-        setHistory(data);
+        setAudioUploads(data);
       })
       .catch((error) => {
         console.error("Error:", error);
         throw error;
       });
-  }, []);
+  }, [refreshFlag]);
+
+  const handleProductDelete = (id) => {
+    setAudioUploads((prevAudioUploads) => {
+      return prevAudioUploads.filter((item) => item._id !== id);
+    });
+  };
 
   return (
     <div className="sidepanel">
       <h2>History</h2>
       <ul className="sidepanel-list">
-        {history.map((item, index) => (
-          <li key={index} className="sidepanel-item">
-            <div>{item?.title}</div>
-            <div>{item?.originalname}</div>
-          </li>
+        {audioUploads.map((item) => (
+          <SideItem
+            key={item._id}
+            item={item}
+            onDeleteProduct={handleProductDelete}
+          />
         ))}
       </ul>
     </div>
