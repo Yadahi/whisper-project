@@ -2,12 +2,13 @@ const { getDb } = require("../util/database");
 const { ObjectId } = require("mongodb");
 
 class Product {
-  constructor(title, type, size, originalname, filename) {
+  constructor(title, type, size, originalname, filename, userId) {
     this.title = title;
     this.type = type;
     this.size = size;
     this.originalname = originalname;
     this.filename = filename;
+    this.userId = userId;
   }
 
   save() {
@@ -16,7 +17,7 @@ class Product {
       .collection("products")
       .insertOne(this)
       .then((result) => {
-        console.log(result);
+        // console.log(result);
       })
       .catch((err) => {
         console.log(err);
@@ -30,7 +31,7 @@ class Product {
       .find()
       .toArray()
       .then((products) => {
-        console.log(products);
+        // console.log(products);
         return products;
       })
       .catch((err) => {
@@ -45,12 +46,26 @@ class Product {
       .collection("products")
       .findOne({ _id: new ObjectId(productId) })
       .then((product) => {
-        console.log(product);
+        // console.log(product);
         return product;
       })
       .catch((err) => {
         console.log(err);
         throw err;
+      });
+  }
+
+  static update(id, updatedFields) {
+    const db = getDb();
+    const objectId = new ObjectId(id);
+    return db
+      .collection("products")
+      .updateOne({ _id: objectId }, { $set: updatedFields })
+      .then((result) => {
+        return result;
+      })
+      .catch((err) => {
+        console.error(err);
       });
   }
 
@@ -60,7 +75,7 @@ class Product {
       .collection("products")
       .deleteOne({ _id: new ObjectId(productId) })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         return result;
       })
       .catch((err) => {

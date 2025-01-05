@@ -1,20 +1,3 @@
-// const mongodb = require("mongodb");
-// const MongoClient = mongodb.MongoClient;
-
-// const mongoConnect = (callback) => {
-//   MongoClient.connect(
-//    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.hj64t13.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
-//   )
-//     .then((client) => {
-//       console.log("Connected!");
-//       callback(client);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
-// module.exports = mongoConnect;
-
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express"); // Assuming you are using Express
 const app = express();
@@ -33,8 +16,6 @@ const client = new MongoClient(uri, {
 });
 
 async function run(server) {
-  console.log("run function");
-
   try {
     // Connect the client to the server
     await client.connect();
@@ -52,10 +33,6 @@ async function run(server) {
   } catch (err) {
     console.error("Failed to connect to MongoDB", err);
   }
-  //   finally {
-  //     // Ensures that the client will close when you finish/error
-  //     await client.close();
-  //   }
 }
 
 // Call the function to run the application
