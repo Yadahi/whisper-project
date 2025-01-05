@@ -1,4 +1,4 @@
-import { useTime } from "../reducers/timeReducer";
+import { useTime } from "../context/TimeContext";
 
 const Lines = ({ output, play }) => {
   return (

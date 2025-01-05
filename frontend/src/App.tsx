@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import openSocket from "socket.io-client";
 import "./App.css";
 import AudioPlayer from "./components/AudioPlayer";
-import { TimeProvider } from "./reducers/timeReducer";
+import { TimeProvider } from "./context/TimeContext";
 import Lines from "./components/Lines";
 import SidePanel from "./components/SidePanel";
 

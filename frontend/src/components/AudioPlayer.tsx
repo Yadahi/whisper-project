@@ -14,7 +14,7 @@ import {
   SET_SECONDS,
   useTime,
   useTimeDispatch,
-} from "../reducers/timeReducer";
+} from "../context/TimeContext";
 import { convertToTime } from "../util/helpers";
 
 // TODO add type for ref

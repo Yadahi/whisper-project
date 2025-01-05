@@ -3,6 +3,20 @@ const SideItem = ({ item, onDeleteProduct }) => {
 
   const handleProductClick = (id) => {
     console.log("Product clicked", id);
+    try {
+      fetch(`http://localhost:3000/${id}`, {
+        method: "GET",
+      })
+        .then((result) => {
+          return result;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   const handleDelete = (id) => {
@@ -20,7 +34,7 @@ const SideItem = ({ item, onDeleteProduct }) => {
   return (
     <li
       className={`sidepanel-item ${true ? "active" : ""}`}
-      onClick={handleProductClick}
+      onClick={() => handleProductClick(_id)}
     >
       <div>{title}</div>
       <div>{originalname}</div>
