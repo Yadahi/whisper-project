@@ -5,16 +5,21 @@ const io = require("../socket");
 const Product = require("../models/product");
 
 const postFile = async (req, res, next) => {
+  console.log("REQUEST", req.body);
+
   if (!req.file.path) return;
 
   let transcriptionChunks = [];
 
   const product = new Product(
     req.body.title,
+    req.body.audio,
     req.file.mimetype,
     req.file.size,
     req.file.originalname,
-    req.file.filename
+    req.file.filename,
+    req.file.path,
+    req.user._id
   );
 
   const pythonProcess = spawn("python3", ["../app.py", req.file.path]);
@@ -24,8 +29,10 @@ const postFile = async (req, res, next) => {
 
     lines.split("\n").forEach((line) => {
       if (line.trim()) {
-        transcriptionChunks.push(line.trim());
-        io.getIO().emit("transcription", { line });
+        const parsedLine = JSON.parse(line.trim());
+        transcriptionChunks.push(parsedLine);
+
+        io.getIO().emit("transcription", { parsedLine });
       }
     });
   });
@@ -36,7 +43,7 @@ const postFile = async (req, res, next) => {
 
   pythonProcess.on("close", (code) => {
     if (code === 0) {
-      product.transcriptionData = transcriptionChunks.join(" ");
+      product.transcriptionData = transcriptionChunks;
       product.save();
       res.status(200).json({ product });
     } else {
@@ -56,7 +63,8 @@ const getAllTranscriptions = async (req, res, next) => {
 
 const getTranscriptionById = async (req, res, next) => {
   const productId = req.params.pid;
-  res.status(200).json({ product: "one product" });
+  const productItem = await Product.findById(productId);
+  res.status(200).json(productItem);
 };
 
 const deleteTranscription = async (req, res, next) => {
@@ -81,10 +89,17 @@ const deleteTranscription = async (req, res, next) => {
   }
 };
 
+const updateTranscription = async (req, res, next) => {
+  const productId = req.params.pid;
+  const updatedTitle = req.body.title;
+  console.log("UPDATED TITLE", updatedTitle);
+};
+
 module.exports = {
   getTranscription,
   postFile,
   getAllTranscriptions,
   getTranscriptionById,
   deleteTranscription,
+  updateTranscription,
 };

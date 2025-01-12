@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dompurify": "^3.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-voice-visualizer": "^2.0.4",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {

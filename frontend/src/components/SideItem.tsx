@@ -1,5 +1,8 @@
+import { useContent } from "../context/ContentContext";
+
 const SideItem = ({ item, onDeleteProduct }) => {
   const { _id, title, originalname } = item;
+  const { contentDispatch } = useContent();
 
   const handleProductClick = (id) => {
     console.log("Product clicked", id);
@@ -7,8 +10,23 @@ const SideItem = ({ item, onDeleteProduct }) => {
       fetch(`http://localhost:3000/${id}`, {
         method: "GET",
       })
-        .then((result) => {
-          return result;
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("DATA", data);
+
+          contentDispatch({
+            type: "SET_CONTENT",
+            payload: {
+              file: data.audio,
+              audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
+              output: data.transcriptionData,
+            },
+          });
         })
         .catch((err) => {
           console.error(err);

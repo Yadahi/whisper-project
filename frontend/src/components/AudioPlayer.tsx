@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useVoiceVisualizer, VoiceVisualizer } from "react-voice-visualizer";
 
 import {
   SET_TOTAL_SECONDS,
@@ -25,15 +26,50 @@ type Props = {
 };
 
 const AudioPlayer = forwardRef(function AudioPlayer(
-  { audioUrl = "", type },
+  { audioUrl = "", type, file },
   ref
 ) {
   // const AudioPlayer: FC<Props> = ({ audioUrl = "", type, ref }) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(audioUrl ? audioUrl : null);
   const [duration, setDuration] = useState<number | null>(null);
   const timeState = useTime();
   const timeDispatch = useTimeDispatch();
   //   const [currentTime, setCurrentTime] = useState(0);
+
+  const [width, setWidth] = useState("100%");
+  const [height, setHeight] = useState("200");
+  const [speed, setSpeed] = useState(3);
+  const [barWidth, setBarWidth] = useState(2);
+  const [gap, setGap] = useState(1);
+  const [rounded, setRounded] = useState(5);
+  const [isControlPanelShown, setIsControlPanelShown] = useState(true);
+  const [isDownloadAudioButtonShown, setIsDownloadAudioButtonShown] =
+    useState(false);
+  const [backgroundColor, setBackgroundColor] = useState("transparent");
+  const [mainBarColor, setMainBarColor] = useState("#FFFFFF");
+  const [secondaryBarColor, setSecondaryBarColor] = useState("#5e5e5e");
+  const [fullscreen, setFullscreen] = useState(false);
+  const [onlyRecording, setOnlyRecording] = useState(false);
+  const [animateCurrentPick, setAnimateCurrentPick] = useState(true);
+  const [isDefaultUIShown, setIsDefaultUIShown] = useState(true);
+  const [defaultAudioWaveIconColor, setDefaultAudioWaveIconColor] =
+    useState(mainBarColor);
+  const [defaultMicrophoneIconColor, setDefaultMicrophoneIconColor] =
+    useState(mainBarColor);
+  const [isProgressIndicatorShown, setIsProgressIndicatorShown] =
+    useState(true);
+  const [isProgressIndicatorTimeShown, setIsProgressIndicatorTimeShown] =
+    useState(true);
+  const [isProgressIndicatorOnHoverShown, setIsProgressIndicatorOnHoverShown] =
+    useState(true);
+  const [
+    isProgressIndicatorTimeOnHoverShown,
+    setIsProgressIndicatorTimeOnHoverShown,
+  ] = useState(true);
+
+  const recorderControls = useVoiceVisualizer();
+
+  const { recordedBlob, error, setPreloadedAudioBlob } = recorderControls;
 
   useEffect(() => {
     const audioElement = audioRef.current;
@@ -59,8 +95,16 @@ const AudioPlayer = forwardRef(function AudioPlayer(
 
   //   update audio when audioUrl changes
   useEffect(() => {
+    console.log("audio url", audioUrl);
+    console.log("file", file);
+
     if (audioRef.current && audioUrl) {
       audioRef.current.load();
+      // TODO fix the blob with file
+      const blob = new Blob([file], { type: type });
+      console.log(blob);
+
+      setPreloadedAudioBlob(blob);
     }
   }, [audioUrl]);
 
@@ -148,6 +192,34 @@ const AudioPlayer = forwardRef(function AudioPlayer(
       <audio controls ref={audioRef}>
         <source src={audioUrl} type={type} />
       </audio>
+
+      <VoiceVisualizer
+        controls={recorderControls}
+        width={width}
+        height={height}
+        speed={speed}
+        backgroundColor={backgroundColor}
+        mainBarColor={mainBarColor}
+        secondaryBarColor={secondaryBarColor}
+        barWidth={barWidth}
+        gap={gap}
+        rounded={rounded}
+        isControlPanelShown={isControlPanelShown}
+        isDownloadAudioButtonShown={isDownloadAudioButtonShown}
+        fullscreen={fullscreen}
+        onlyRecording={onlyRecording}
+        animateCurrentPick={animateCurrentPick}
+        isDefaultUIShown={isDefaultUIShown}
+        defaultAudioWaveIconColor={defaultAudioWaveIconColor}
+        defaultMicrophoneIconColor={defaultMicrophoneIconColor}
+        isProgressIndicatorShown={isProgressIndicatorShown}
+        isProgressIndicatorTimeShown={isProgressIndicatorTimeShown}
+        isProgressIndicatorOnHoverShown={isProgressIndicatorOnHoverShown}
+        isProgressIndicatorTimeOnHoverShown={
+          isProgressIndicatorTimeOnHoverShown
+        }
+      />
+
       <div>
         <label htmlFor="time">Time</label>
         {!!timeState.hours && (

@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import { useTime } from "../context/TimeContext";
 
 const Lines = ({ output, play }) => {
@@ -24,13 +25,18 @@ const Line = ({ line, play }) => {
     timeState?.totalSeconds >= Math.floor(start) &&
     timeState?.totalSeconds < Math.floor(end);
 
+  const sanitizedText = DOMPurify.sanitize(text);
+
   return (
     <div className={`line-row ${highlight ? "highlight" : ""}`}>
       <div className="line-time">
         {Math.floor(start)} - {Math.floor(end)}
       </div>
       <div onClick={handlePlay}>Play from here</div>
-      <div className="line-text">{text}</div>
+      <div
+        className="line-text"
+        dangerouslySetInnerHTML={{ __html: sanitizedText }}
+      />
     </div>
   );
 };

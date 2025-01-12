@@ -13,4 +13,6 @@ router.get("/:pid", transcriptionController.getTranscriptionById);
 
 router.delete("/:pid", transcriptionController.deleteTranscription);
 
+// router.patch("/:pid", transcriptionController.updateTranscription);
+
 module.exports = router;

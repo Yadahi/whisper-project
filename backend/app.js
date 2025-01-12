@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const { createServer } = require("node:http");
 const socket = require("./socket");
 const bodyParser = require("body-parser");
@@ -11,6 +12,8 @@ const app = express();
 const server = createServer(app);
 const io = socket.init(server);
 app.use(bodyParser.json());
+
+app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

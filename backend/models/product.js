@@ -2,12 +2,14 @@ const { getDb } = require("../util/database");
 const { ObjectId } = require("mongodb");
 
 class Product {
-  constructor(title, type, size, originalname, filename, userId) {
+  constructor(title, audio, type, size, originalname, filename, path, userId) {
     this.title = title;
+    this.audio = audio;
     this.type = type;
     this.size = size;
     this.originalname = originalname;
     this.filename = filename;
+    this.path = path;
     this.userId = userId;
   }
 
