@@ -6,14 +6,17 @@ const Product = require("../models/product");
 
 const postFile = async (req, res, next) => {
   console.log("REQUEST", req.body);
+  console.log("FILE", req.file);
 
-  if (!req.file.path) return;
+  if (!req.file.path) {
+    return res.status(400).json({ error: "File not uploaded." });
+  }
 
   let transcriptionChunks = [];
 
   const product = new Product(
     req.body.title,
-    req.body.audio,
+    req.file,
     req.file.mimetype,
     req.file.size,
     req.file.originalname,

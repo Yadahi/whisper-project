@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { useVoiceVisualizer, VoiceVisualizer } from "react-voice-visualizer";
+import { useContent } from "../context/ContentContext";
 
 import {
   SET_TOTAL_SECONDS,
@@ -25,11 +26,10 @@ type Props = {
   ref: any;
 };
 
-const AudioPlayer = forwardRef(function AudioPlayer(
-  { audioUrl = "", type, file },
-  ref
-) {
+const AudioPlayer = forwardRef(function AudioPlayer({}, ref) {
   // const AudioPlayer: FC<Props> = ({ audioUrl = "", type, ref }) => {
+  const { state, contentDispatch } = useContent();
+  const { file, audioUrl } = state;
   const audioRef = useRef<HTMLAudioElement | null>(audioUrl ? audioUrl : null);
   const [duration, setDuration] = useState<number | null>(null);
   const timeState = useTime();
@@ -95,17 +95,46 @@ const AudioPlayer = forwardRef(function AudioPlayer(
 
   //   update audio when audioUrl changes
   useEffect(() => {
-    console.log("audio url", audioUrl);
+    console.log("audioUrl", audioUrl);
     console.log("file", file);
+    // console.log("file", file.blob());
 
-    if (audioRef.current && audioUrl) {
+    if (audioRef.current && audioUrl && file) {
       audioRef.current.load();
       // TODO fix the blob with file
-      const blob = new Blob([file], { type: type });
-      console.log(blob);
 
-      setPreloadedAudioBlob(blob);
+      // const blob = file.blob();
+      // const blob = new Blob([file], { type: file.mimetype });
+      // console.log(blob);
+
+      // setPreloadedAudioBlob(blob);
+      // contentDispatch({ type: "SET_CONTENT", payload: { blob: blob } });
     }
+  }, [audioUrl, file]);
+
+  useEffect(() => {
+    if (!audioUrl) return;
+
+    const createBlobFromServerFile = async () => {
+      try {
+        console.log("Audio URL:", audioUrl); // Log the file URL
+        const response = await fetch(audioUrl); // Fetch the audio file from the server
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch the audio file.");
+        }
+
+        const blob = await response.blob(); // Convert response into a Blob
+        console.log("Blob created:", blob);
+
+        setPreloadedAudioBlob(blob); // Pass the Blob to the visualizer
+        // contentDispatch({ type: "SET_CONTENT", payload: { blob } });
+      } catch (error) {
+        console.error("Error creating blob from server file:", error);
+      }
+    };
+
+    createBlobFromServerFile();
   }, [audioUrl]);
 
   //   update duration when audioUrl changes
@@ -190,7 +219,7 @@ const AudioPlayer = forwardRef(function AudioPlayer(
   return (
     <div className="audio-player">
       <audio controls ref={audioRef}>
-        <source src={audioUrl} type={type} />
+        <source src={audioUrl} type={file?.type} />
       </audio>
 
       <VoiceVisualizer

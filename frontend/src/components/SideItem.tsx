@@ -22,7 +22,7 @@ const SideItem = ({ item, onDeleteProduct }) => {
           contentDispatch({
             type: "SET_CONTENT",
             payload: {
-              file: data.audio,
+              file: data.file,
               audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
               output: data.transcriptionData,
             },

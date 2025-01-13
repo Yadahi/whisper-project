@@ -11,9 +11,6 @@ const transcriptionRoutes = require("./routes/transcription-routes");
 const app = express();
 const server = createServer(app);
 const io = socket.init(server);
-app.use(bodyParser.json());
-
-app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -24,6 +21,9 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
   next();
 });
+
+app.use(bodyParser.json());
+app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
 
 app.use((req, res, next) => {
   User.findById("6779a0909acce51ff109fa5c")

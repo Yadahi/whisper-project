@@ -7,7 +7,7 @@ import Search from "./Search";
 
 const MainSection = ({ onRefresh }) => {
   const [loading, setLoading] = useState(false);
-  const [audioFile, setAudioFile] = useState("");
+  const [audioFile, setAudioFile] = useState(null);
   const audioPlayerRef = useRef(null);
   const formRef = useRef(null);
 
@@ -31,21 +31,14 @@ const MainSection = ({ onRefresh }) => {
   }, []);
 
   const handleAudioChange = (e) => {
-    setAudioFile({});
     const selectedFile = e.target.files[0];
-    setAudioFile(selectedFile);
-    console.log("selected file", selectedFile);
-    console.log("audio url", audioUrl);
-
-    contentDispatch({ type: "SET_CONTENT", payload: { file: selectedFile } });
 
     if (selectedFile) {
       const fileUrl = URL.createObjectURL(selectedFile);
-      console.log("fileUrl", fileUrl);
-
-      //   TODO do not save the audioUrl
-
-      contentDispatch({ type: "SET_CONTENT", payload: { audioUrl: fileUrl } });
+      contentDispatch({
+        type: "SET_CONTENT",
+        payload: { file: selectedFile, audioUrl: fileUrl },
+      });
     }
   };
 
@@ -55,8 +48,8 @@ const MainSection = ({ onRefresh }) => {
     setLoading(true);
     const formData = new FormData();
     // TODO maybe remove audiofile
-    formData.append("audio", audioFile);
     formData.append("title", e.target.title.value);
+    formData.append("audio", file);
 
     fetch("http://localhost:3000/", {
       method: "POST",
@@ -76,8 +69,8 @@ const MainSection = ({ onRefresh }) => {
           formRef.current.reset();
         }
 
-        contentDispatch({ type: "SET_CONTENT", payload: { file: null } });
-        contentDispatch({ type: "SET_CONTENT", payload: { audioUrl: "" } });
+        // contentDispatch({ type: "SET_CONTENT", payload: { file: null } });
+        // contentDispatch({ type: "SET_CONTENT", payload: { audioUrl: "" } });
       })
       .catch((error) => {
         console.error("Error:", error);
