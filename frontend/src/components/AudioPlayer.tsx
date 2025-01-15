@@ -26,10 +26,10 @@ type Props = {
   ref: any;
 };
 
-const AudioPlayer = forwardRef(function AudioPlayer({}, ref) {
+const AudioPlayer = forwardRef(function AudioPlayer(props, ref) {
   // const AudioPlayer: FC<Props> = ({ audioUrl = "", type, ref }) => {
-  const { state, contentDispatch } = useContent();
-  const { file, audioUrl } = state;
+  const { state } = useContent();
+  const { audioUrl, file } = state;
   const audioRef = useRef<HTMLAudioElement | null>(audioUrl ? audioUrl : null);
   const [duration, setDuration] = useState<number | null>(null);
   const timeState = useTime();
@@ -79,7 +79,6 @@ const AudioPlayer = forwardRef(function AudioPlayer({}, ref) {
           type: SET_TOTAL_SECONDS,
           payload: audioElement.currentTime,
         });
-        // setCurrentTime(audioElement.currentTime);
       }
     };
     if (audioElement) {
@@ -95,20 +94,8 @@ const AudioPlayer = forwardRef(function AudioPlayer({}, ref) {
 
   //   update audio when audioUrl changes
   useEffect(() => {
-    console.log("audioUrl", audioUrl);
-    console.log("file", file);
-    // console.log("file", file.blob());
-
-    if (audioRef.current && audioUrl && file) {
+    if (audioRef.current && audioUrl) {
       audioRef.current.load();
-      // TODO fix the blob with file
-
-      // const blob = file.blob();
-      // const blob = new Blob([file], { type: file.mimetype });
-      // console.log(blob);
-
-      // setPreloadedAudioBlob(blob);
-      // contentDispatch({ type: "SET_CONTENT", payload: { blob: blob } });
     }
   }, [audioUrl, file]);
 
@@ -117,25 +104,22 @@ const AudioPlayer = forwardRef(function AudioPlayer({}, ref) {
 
     const createBlobFromServerFile = async () => {
       try {
-        console.log("Audio URL:", audioUrl); // Log the file URL
-        const response = await fetch(audioUrl); // Fetch the audio file from the server
+        const response = await fetch(audioUrl);
 
         if (!response.ok) {
           throw new Error("Failed to fetch the audio file.");
         }
 
-        const blob = await response.blob(); // Convert response into a Blob
-        console.log("Blob created:", blob);
+        const blob = await response.blob();
 
-        setPreloadedAudioBlob(blob); // Pass the Blob to the visualizer
-        // contentDispatch({ type: "SET_CONTENT", payload: { blob } });
+        setPreloadedAudioBlob(blob);
       } catch (error) {
         console.error("Error creating blob from server file:", error);
       }
     };
 
     createBlobFromServerFile();
-  }, [audioUrl]);
+  }, [audioUrl, setPreloadedAudioBlob]);
 
   //   update duration when audioUrl changes
   useEffect(() => {

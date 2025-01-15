@@ -7,7 +7,6 @@ import Search from "./Search";
 
 const MainSection = ({ onRefresh }) => {
   const [loading, setLoading] = useState(false);
-  const [audioFile, setAudioFile] = useState(null);
   const audioPlayerRef = useRef(null);
   const formRef = useRef(null);
 
@@ -17,8 +16,6 @@ const MainSection = ({ onRefresh }) => {
   useEffect(() => {
     const socket = openSocket("http://localhost:3000");
     socket.on("transcription", (data) => {
-      console.log(data);
-
       const line = data.parsedLine;
 
       contentDispatch({
@@ -37,17 +34,16 @@ const MainSection = ({ onRefresh }) => {
       const fileUrl = URL.createObjectURL(selectedFile);
       contentDispatch({
         type: "SET_CONTENT",
-        payload: { file: selectedFile, audioUrl: fileUrl },
+        payload: { audioUrl: fileUrl, file: null, output: [] },
       });
     }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    contentDispatch({ type: "SET_CONTENT", payload: { output: [] } });
     setLoading(true);
     const formData = new FormData();
-    // TODO maybe remove audiofile
+
     formData.append("title", e.target.title.value);
     formData.append("audio", file);
 
@@ -68,9 +64,6 @@ const MainSection = ({ onRefresh }) => {
         if (formRef.current) {
           formRef.current.reset();
         }
-
-        // contentDispatch({ type: "SET_CONTENT", payload: { file: null } });
-        // contentDispatch({ type: "SET_CONTENT", payload: { audioUrl: "" } });
       })
       .catch((error) => {
         console.error("Error:", error);

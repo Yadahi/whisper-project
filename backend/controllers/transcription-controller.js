@@ -16,7 +16,6 @@ const postFile = async (req, res, next) => {
 
   const product = new Product(
     req.body.title,
-    req.file,
     req.file.mimetype,
     req.file.size,
     req.file.originalname,

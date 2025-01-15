@@ -7,12 +7,11 @@ const ADD_LINE = "ADD_LINE";
 const initialState = {
   file: null,
   audioUrl: "",
-  blob: null,
   output: [],
 };
 
 const contentReducer = (state, action) => {
-  console.log(action.payload);
+  console.trace(action.payload);
 
   switch (action.type) {
     case SET_CONTENT:
