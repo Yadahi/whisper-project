@@ -69,7 +69,7 @@ const AudioPlayer = forwardRef(function AudioPlayer(props, ref) {
 
   const recorderControls = useVoiceVisualizer();
 
-  const { recordedBlob, error, setPreloadedAudioBlob } = recorderControls;
+  const { setPreloadedAudioBlob } = recorderControls;
 
   useEffect(() => {
     const audioElement = audioRef.current;
@@ -119,7 +119,7 @@ const AudioPlayer = forwardRef(function AudioPlayer(props, ref) {
     };
 
     createBlobFromServerFile();
-  }, [audioUrl, setPreloadedAudioBlob]);
+  }, [audioUrl]);
 
   //   update duration when audioUrl changes
   useEffect(() => {
