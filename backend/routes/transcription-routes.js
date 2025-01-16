@@ -5,8 +5,6 @@ const fileUpload = require("../middleware/file-upload");
 
 router.post("/", fileUpload.single("audio"), transcriptionController.postFile);
 
-router.get("/", transcriptionController.getTranscription);
-
 router.get("/all", transcriptionController.getAllTranscriptions);
 
 router.get("/:pid", transcriptionController.getTranscriptionById);
