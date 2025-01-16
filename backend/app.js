@@ -24,13 +24,6 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
-app.use((error, req, res, next) => {
-  if (res.headerSent) {
-    return next(error);
-  }
-  res.status(error.code || 500);
-  res.json({ message: error.message || "An unknown error occured!" });
-});
 
 app.use((req, res, next) => {
   User.findById("6779a0909acce51ff109fa5c")
@@ -44,5 +37,12 @@ app.use((req, res, next) => {
 });
 
 app.use("/", transcriptionRoutes);
+app.use((error, req, res, next) => {
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error occured!" });
+});
 
 runServer(server).catch(console.dir);
