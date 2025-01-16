@@ -12,6 +12,7 @@ const app = express();
 const server = createServer(app);
 const io = socket.init(server);
 
+// CORS Headers
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -23,8 +24,11 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+
+// Serve static files
 app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
 
+// Middleware to fetch user
 app.use((req, res, next) => {
   User.findById("6779a0909acce51ff109fa5c")
     .then((user) => {
@@ -36,7 +40,10 @@ app.use((req, res, next) => {
     });
 });
 
+// Routes
 app.use("/", transcriptionRoutes);
+
+// Error-handling
 app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
@@ -45,4 +52,5 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occured!" });
 });
 
+// Start server
 runServer(server).catch(console.dir);
