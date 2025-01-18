@@ -43,6 +43,12 @@ app.use((req, res, next) => {
 // Routes
 app.use("/", transcriptionRoutes);
 
+app.use((req, res, next) => {
+  const error = new Error("Could not find this route.");
+  error.code = 404;
+  return next(error);
+});
+
 // Error-handling
 app.use((error, req, res, next) => {
   if (res.headerSent) {
