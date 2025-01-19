@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useContent } from "../context/ContentContext";
 
 const SideItem = ({ item, onDeleteProduct }) => {
@@ -52,11 +53,13 @@ const SideItem = ({ item, onDeleteProduct }) => {
   return (
     <li
       className={`sidepanel-item ${true ? "active" : ""}`}
-      onClick={() => handleProductClick(_id)}
+      // onClick={() => handleProductClick(_id)}
     >
-      <div>{title}</div>
-      <div>{originalname}</div>
-      <div onClick={() => handleDelete(_id)}>X</div>
+      <Link to={`/item/${_id}`} className="item-link">
+        <div>{title}</div>
+        <div>{originalname}</div>
+        <div onClick={() => handleDelete(_id)}>X</div>
+      </Link>
     </li>
   );
 };

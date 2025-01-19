@@ -54,3 +54,53 @@ process.on("SIGINT", async () => {
 });
 
 module.exports = { runServer, getDb };
+
+// const { MongoClient, ServerApiVersion } = require("mongodb");
+// const express = require("express"); // Assuming you are using Express
+// const { default: mongoose } = require("mongoose");
+// const app = express();
+
+// const port = process.env.PORT || 3000;
+
+// const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.hj64t13.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
+// async function run(server) {
+//   try {
+//     // Connect the client to the server
+//     await mongoose.connect(uri);
+
+//     console.log("Connected to MongoDB with Mongoose!");
+
+//     // Start the server only after a successful database connection
+//     server.listen(port, () => {
+//       console.log(`Example app listening on port ${port}`);
+//     });
+//   } catch (err) {
+//     console.error("Failed to connect to MongoDB", err);
+//   }
+// }
+
+// // Call the function to run the application
+// const runServer = run;
+
+// // const getDb = () => {
+// //   if (client.db()) {
+// //     return client.db("transcript-app");
+// //   }
+// //   return null;
+// // };
+
+// // Utility function to get the Mongoose connection
+// const getDb = () => {
+//   return mongoose.connection;
+// };
+
+// // Ensure the client will close when the Node.js process exits
+// process.on("SIGINT", async () => {
+//   console.log("Closing MongoDB client...");
+//   await client.close();
+//   console.log("MongoDB client closed.");
+//   process.exit(0);
+// });
+
+// module.exports = { runServer, getDb };

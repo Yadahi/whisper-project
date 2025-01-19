@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const contentReducer = (state, action) => {
-  console.trace(action.payload);
+  // console.trace(action.payload);
 
   switch (action.type) {
     case SET_CONTENT:

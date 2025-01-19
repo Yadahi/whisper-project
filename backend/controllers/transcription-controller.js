@@ -105,7 +105,15 @@ const getTranscriptionById = async (req, res, next) => {
       return next(error);
     }
 
-    res.status(200).json(productItem);
+    res.status(200).json({
+      ...productItem,
+      file: {
+        type: productItem.type,
+        size: productItem.size,
+        originalname: productItem.originalname,
+        filename: productItem.filename,
+      },
+    });
   } catch (error) {
     next(error);
   }

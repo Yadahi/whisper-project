@@ -36,37 +36,6 @@ const AudioPlayer = forwardRef(function AudioPlayer(props, ref) {
   const timeDispatch = useTimeDispatch();
   //   const [currentTime, setCurrentTime] = useState(0);
 
-  const [width, setWidth] = useState("100%");
-  const [height, setHeight] = useState("200");
-  const [speed, setSpeed] = useState(3);
-  const [barWidth, setBarWidth] = useState(2);
-  const [gap, setGap] = useState(1);
-  const [rounded, setRounded] = useState(5);
-  const [isControlPanelShown, setIsControlPanelShown] = useState(true);
-  const [isDownloadAudioButtonShown, setIsDownloadAudioButtonShown] =
-    useState(false);
-  const [backgroundColor, setBackgroundColor] = useState("transparent");
-  const [mainBarColor, setMainBarColor] = useState("#FFFFFF");
-  const [secondaryBarColor, setSecondaryBarColor] = useState("#5e5e5e");
-  const [fullscreen, setFullscreen] = useState(false);
-  const [onlyRecording, setOnlyRecording] = useState(false);
-  const [animateCurrentPick, setAnimateCurrentPick] = useState(true);
-  const [isDefaultUIShown, setIsDefaultUIShown] = useState(true);
-  const [defaultAudioWaveIconColor, setDefaultAudioWaveIconColor] =
-    useState(mainBarColor);
-  const [defaultMicrophoneIconColor, setDefaultMicrophoneIconColor] =
-    useState(mainBarColor);
-  const [isProgressIndicatorShown, setIsProgressIndicatorShown] =
-    useState(true);
-  const [isProgressIndicatorTimeShown, setIsProgressIndicatorTimeShown] =
-    useState(true);
-  const [isProgressIndicatorOnHoverShown, setIsProgressIndicatorOnHoverShown] =
-    useState(true);
-  const [
-    isProgressIndicatorTimeOnHoverShown,
-    setIsProgressIndicatorTimeOnHoverShown,
-  ] = useState(true);
-
   const recorderControls = useVoiceVisualizer();
 
   const { setPreloadedAudioBlob } = recorderControls;
@@ -206,32 +175,32 @@ const AudioPlayer = forwardRef(function AudioPlayer(props, ref) {
         <source src={audioUrl} type={file?.type} />
       </audio>
 
-      <VoiceVisualizer
-        controls={recorderControls}
-        width={width}
-        height={height}
-        speed={speed}
-        backgroundColor={backgroundColor}
-        mainBarColor={mainBarColor}
-        secondaryBarColor={secondaryBarColor}
-        barWidth={barWidth}
-        gap={gap}
-        rounded={rounded}
-        isControlPanelShown={isControlPanelShown}
-        isDownloadAudioButtonShown={isDownloadAudioButtonShown}
-        fullscreen={fullscreen}
-        onlyRecording={onlyRecording}
-        animateCurrentPick={animateCurrentPick}
-        isDefaultUIShown={isDefaultUIShown}
-        defaultAudioWaveIconColor={defaultAudioWaveIconColor}
-        defaultMicrophoneIconColor={defaultMicrophoneIconColor}
-        isProgressIndicatorShown={isProgressIndicatorShown}
-        isProgressIndicatorTimeShown={isProgressIndicatorTimeShown}
-        isProgressIndicatorOnHoverShown={isProgressIndicatorOnHoverShown}
-        isProgressIndicatorTimeOnHoverShown={
+      {!!audioUrl && (
+        <VoiceVisualizer
+          controls={recorderControls}
+          width="100%"
+          height="200"
+          speed={3}
+          backgroundColor="transparent"
+          mainBarColor="#FFFFFF"
+          secondaryBarColor="#5e5e5e"
+          barWidth={2}
+          gap={1}
+          rounded={5}
+          isControlPanelShown
+          isDownloadAudioButtonShown={false}
+          fullscreen={false}
+          onlyRecording={false}
+          animateCurrentPick
+          isDefaultUIShown
+          defaultAudioWaveIconColor="#FFFFFF"
+          defaultMicrophoneIconColor="#FFFFFF"
+          isProgressIndicatorShown
+          isProgressIndicatorTimeShown
+          isProgressIndicatorOnHoverShown
           isProgressIndicatorTimeOnHoverShown
-        }
-      />
+        />
+      )}
 
       <div>
         <label htmlFor="time">Time</label>
