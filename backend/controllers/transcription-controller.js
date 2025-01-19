@@ -14,7 +14,7 @@ const postFile = async (req, res, next) => {
     }
 
     let transcriptionChunks = [];
-    let errorOccurred = false;
+    let responseSent = false;
 
     const product = new Product(
       req.body.title,
@@ -33,17 +33,28 @@ const postFile = async (req, res, next) => {
 
       lines.split("\n").forEach((line) => {
         if (line.trim()) {
-          const parsedLine = JSON.parse(line.trim());
-          transcriptionChunks.push(parsedLine);
-
-          io.getIO().emit("transcription", { parsedLine });
+          try {
+            const parsedLine = JSON.parse(line.trim());
+            transcriptionChunks.push(parsedLine);
+            io.getIO().emit("transcription", { parsedLine });
+          } catch (err) {
+            console.error("Error parsing line from Python:", err);
+          }
         }
       });
     });
 
     pythonProcess.stderr.on("data", (data) => {
-      if (!errorOccurred) {
-        errorOccurred = true;
+      const stderrOutput = data.toString();
+
+      // Ignore warnings that match specific patterns
+      if (stderrOutput.includes("FP16 is not supported")) {
+        console.warn("Python warning:", stderrOutput); // Log as a warning
+        return;
+      }
+
+      if (!responseSent) {
+        responseSent = true; // Ensure error response is sent only once
         console.error("Error from Python Process:", data.toString());
         const error = new Error(`Python error: ${data.toString()}`);
         next(error);
@@ -51,6 +62,8 @@ const postFile = async (req, res, next) => {
     });
 
     pythonProcess.on("close", (code) => {
+      if (responseSent) return;
+
       if (code === 0) {
         product.transcriptionData = transcriptionChunks;
         product.save();
@@ -62,7 +75,7 @@ const postFile = async (req, res, next) => {
       }
     });
   } catch (error) {
-    next(error);
+    if (!responseSent) next(error);
   }
 };
 
