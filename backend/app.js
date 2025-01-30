@@ -32,7 +32,7 @@ app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
 app.use((req, res, next) => {
   User.findById("6779a0909acce51ff109fa5c")
     .then((user) => {
-      req.user = user;
+      req.user = new User(user.name, user.email, user._id);
       next();
     })
     .catch((err) => {

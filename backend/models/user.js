@@ -2,9 +2,10 @@ const { getDb } = require("../util/database");
 const { ObjectId } = require("mongodb");
 
 class User {
-  constructor(name, email) {
+  constructor(name, email, id) {
     this.name = name;
     this.email = email;
+    this._id = id;
   }
 
   save() {

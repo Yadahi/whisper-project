@@ -23,11 +23,11 @@ class Product {
       });
   }
 
-  static fetchAll() {
+  static fetchAll(userId) {
     const db = getDb();
     return db
       .collection("products")
-      .find()
+      .find({ userId: new ObjectId(userId) })
       .toArray()
       .then((products) => {
         // console.log(products);
