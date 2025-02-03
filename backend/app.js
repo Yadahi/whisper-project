@@ -5,8 +5,12 @@ const socket = require("./socket");
 const bodyParser = require("body-parser");
 const { runServer } = require("./util/database");
 const User = require("./models/user");
+const { mongoose } = require("mongoose");
 
 const transcriptionRoutes = require("./routes/transcription-routes");
+
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.hj64t13.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const port = process.env.PORT || 3000;
 
 const app = express();
 const server = createServer(app);
@@ -60,4 +64,13 @@ app.use((error, req, res, next) => {
 });
 
 // Start server
-runServer(server).catch(console.dir);
+// runServer(server).catch(console.dir);
+mongoose
+  .connect(uri)
+  .then((result) => {
+    console.log("connected");
+    server.listen(port);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
