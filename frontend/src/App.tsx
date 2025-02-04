@@ -14,7 +14,7 @@ const App = () => {
     <div className="App">
       <TimeProvider>
         <ContentProvider>
-          <SidePanel refreshFlag={refreshFlag} />
+          {/* <SidePanel refreshFlag={refreshFlag} /> */}
           <Routes>
             <Route
               path="/"

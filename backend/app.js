@@ -9,7 +9,7 @@ const { mongoose } = require("mongoose");
 
 const transcriptionRoutes = require("./routes/transcription-routes");
 
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.hj64t13.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.hj64t13.mongodb.net/transcription-db?retryWrites=true&w=majority&appName=Cluster0`;
 const port = process.env.PORT || 3000;
 
 const app = express();
@@ -33,16 +33,18 @@ app.use(bodyParser.json());
 app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
 
 // Middleware to fetch user
-app.use((req, res, next) => {
-  User.findById("6779a0909acce51ff109fa5c")
-    .then((user) => {
-      req.user = new User(user.name, user.email, user._id);
-      next();
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-});
+// app.use((req, res, next) => {
+//   User.findById("6779a0909acce51ff109fa5c")
+//     .then((user) => {
+//       // req.user = new User(user.name, user.email, user._id);
+//       req.user = user;
+
+//       next();
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     });
+// });
 
 // Routes
 app.use("/", transcriptionRoutes);

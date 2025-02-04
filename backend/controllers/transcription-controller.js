@@ -6,9 +6,6 @@ const Product = require("../models/product");
 const { ObjectId } = require("mongodb");
 
 const postFile = async (req, res, next) => {
-  console.log("=== user ===", req.user);
-  console.log("=== user id ===");
-
   try {
     if (!req.file?.path) {
       const error = new Error("File not uploaded.");
@@ -19,15 +16,15 @@ const postFile = async (req, res, next) => {
     let transcriptionChunks = [];
     let responseSent = false;
 
-    const product = new Product(
-      req.body.title,
-      req.file.mimetype,
-      req.file.size,
-      req.file.originalname,
-      req.file.filename,
-      req.file.path,
-      req.user._id
-    );
+    const product = new Product({
+      title: req.body.title,
+      type: req.file.mimetype,
+      size: req.file.size,
+      originalname: req.file.originalname,
+      filename: req.file.filename,
+      path: req.file.path,
+      // userId: req.user._id,
+    });
 
     const pythonProcess = spawn("python3", ["../app.py", req.file.path]);
 
@@ -64,12 +61,13 @@ const postFile = async (req, res, next) => {
       }
     });
 
-    pythonProcess.on("close", (code) => {
+    pythonProcess.on("close", async (code) => {
       if (responseSent) return;
 
       if (code === 0) {
+        // product.set("transcriptionData", transcriptionChunks);
         product.transcriptionData = transcriptionChunks;
-        product.save();
+        await product.save();
         res.status(200).json({ product });
       } else {
         const error = new Error("Failed to process the audio file");
@@ -84,7 +82,7 @@ const postFile = async (req, res, next) => {
 
 const getAllTranscriptions = async (req, res, next) => {
   try {
-    console.log(req.user);
+    console.log("getAllTranscriptions user", req.user);
 
     const userId = req.user._id;
     const products = await Product.fetchAll(userId);

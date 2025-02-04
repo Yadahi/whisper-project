@@ -5,11 +5,11 @@ const fileUpload = require("../middleware/file-upload");
 
 router.post("/", fileUpload.single("audio"), transcriptionController.postFile);
 
-router.get("/all", transcriptionController.getAllTranscriptions);
+// router.get("/all", transcriptionController.getAllTranscriptions);
 
-router.get("/:pid", transcriptionController.getTranscriptionById);
+// router.get("/:pid", transcriptionController.getTranscriptionById);
 
-router.delete("/:pid", transcriptionController.deleteTranscription);
+// router.delete("/:pid", transcriptionController.deleteTranscription);
 
 // router.patch("/:pid", transcriptionController.updateTranscription);
 
