@@ -14,7 +14,7 @@ const SidePanel = ({ refreshFlag }) => {
         return response.json();
       })
       .then((data) => {
-        setAudioUploads(data);
+        if (data) setAudioUploads(data);
       })
       .catch((error) => {
         console.error("Error:", error);

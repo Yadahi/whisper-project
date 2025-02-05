@@ -33,18 +33,18 @@ app.use(bodyParser.json());
 app.use("/uploads/audios", express.static(path.join("uploads", "audios")));
 
 // Middleware to fetch user
-// app.use((req, res, next) => {
-//   User.findById("6779a0909acce51ff109fa5c")
-//     .then((user) => {
-//       // req.user = new User(user.name, user.email, user._id);
-//       req.user = user;
+app.use((req, res, next) => {
+  User.findById("6779a0909acce51ff109fa5c")
+    .then((user) => {
+      req.user = user;
+      console.log("found user by id");
 
-//       next();
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     });
-// });
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
 
 // Routes
 app.use("/", transcriptionRoutes);

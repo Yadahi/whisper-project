@@ -6,6 +6,8 @@ const Product = require("../models/product");
 const { ObjectId } = require("mongodb");
 
 const postFile = async (req, res, next) => {
+  let responseSent = false;
+
   try {
     if (!req.file?.path) {
       const error = new Error("File not uploaded.");
@@ -14,7 +16,6 @@ const postFile = async (req, res, next) => {
     }
 
     let transcriptionChunks = [];
-    let responseSent = false;
 
     const product = new Product({
       title: req.body.title,
@@ -23,7 +24,7 @@ const postFile = async (req, res, next) => {
       originalname: req.file.originalname,
       filename: req.file.filename,
       path: req.file.path,
-      // userId: req.user._id,
+      userId: req.user?._id,
     });
 
     const pythonProcess = spawn("python3", ["../app.py", req.file.path]);
@@ -85,7 +86,8 @@ const getAllTranscriptions = async (req, res, next) => {
     console.log("getAllTranscriptions user", req.user);
 
     const userId = req.user._id;
-    const products = await Product.fetchAll(userId);
+    const products = await Product.findById(userId);
+    // const products = await Product.fetchAll(userId);
     res.status(200).json(products);
   } catch (error) {
     next(error);

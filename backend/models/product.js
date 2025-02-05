@@ -116,11 +116,11 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    // userId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "User",
-    //   required: true, // maybe false
-    // },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false, // maybe false
+    },
     transcriptionData: {
       type: [Schema.Types.Mixed],
       default: [],
