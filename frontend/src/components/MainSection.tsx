@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useContent } from "../context/ContentContext";
 import AudioPlayer from "./AudioPlayer";
 import Lines from "./Lines";
@@ -6,9 +6,10 @@ import openSocket from "socket.io-client";
 import Search from "./Search";
 import { useParams } from "react-router";
 
-const MainSection = ({ onRefresh }) => {
+const MainSection = memo(({ onRefresh }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isEditable, setIsEditable] = useState(false);
   const audioPlayerRef = useRef(null);
   const formRef = useRef(null);
 
@@ -30,46 +31,48 @@ const MainSection = ({ onRefresh }) => {
     return () => socket.disconnect();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!params.id) {
-        return;
-      }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!params.id) {
+  //       return;
+  //     }
 
-      setLoading(true); // Start loading
-      setError(null); // Clear previous errors
+  //     setLoading(true); // Start loading
+  //     setError(null); // Clear previous errors
 
-      try {
-        const response = await fetch(`http://localhost:3000/${params.id}`);
+  //     try {
+  //       const response = await fetch(`http://localhost:3000/${params.id}`);
 
-        if (!response.ok) {
-          // Extract the error message from the response body
-          const errorData = await response.json();
-          throw new Error(
-            errorData.message || `HTTP error! Status: ${response.status}`
-          );
-        }
+  //       if (!response.ok) {
+  //         // Extract the error message from the response body
+  //         const errorData = await response.json();
+  //         throw new Error(
+  //           errorData.message || `HTTP error! Status: ${response.status}`
+  //         );
+  //       }
 
-        const data = await response.json();
+  //       const data = await response.json();
 
-        contentDispatch({
-          type: "SET_CONTENT",
-          payload: {
-            file: data.file,
-            audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
-            output: data.transcriptionData,
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error.message);
-        setError(error.message); // Use the error message from the backend
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
+  //       console.log("DATA", data);
 
-    fetchData();
-  }, [params.id, contentDispatch]);
+  //       contentDispatch({
+  //         type: "SET_CONTENT",
+  //         payload: {
+  //           file: data.file,
+  //           audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
+  //           output: data.transcriptionData,
+  //         },
+  //       });
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error.message);
+  //       setError(error.message); // Use the error message from the backend
+  //     } finally {
+  //       setLoading(false); // Stop loading
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [params.id]);
 
   const handleAudioChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -126,6 +129,20 @@ const MainSection = ({ onRefresh }) => {
     return <div className="error-message">{error}</div>;
   }
 
+  // TODO detect click outside
+  const title = () => {
+    if (isEditable || !file.title) {
+      return (
+        <label htmlFor="title">
+          Title
+          <input type="text" id="title" name="title" value={file.title} />
+        </label>
+      );
+    } else {
+      return <span onClick={() => setIsEditable(true)}>{file.title}</span>;
+    }
+  };
+
   return (
     <div className="main">
       <Search />
@@ -138,15 +155,19 @@ const MainSection = ({ onRefresh }) => {
 
       {loading && <div>LOADING</div>}
       <form ref={formRef} onSubmit={submitHandler}>
-        <label htmlFor="title">Title</label>
-        <input type="text" id="title" name="title" />
-        <label htmlFor="audio-input"></label>
-        <input
-          type="file"
-          id="audio-input"
-          name="audio"
-          onChange={handleAudioChange}
-        />
+        {/* <label htmlFor="title">
+          Title
+          <input type="text" id="title" name="title" />
+        </label> */}
+        {title()}
+        <label htmlFor="audio-input">
+          <input
+            type="file"
+            id="audio-input"
+            name="audio"
+            onChange={handleAudioChange}
+          />
+        </label>
         <button type="submit">Send</button>
       </form>
       {!!output && (
@@ -156,6 +177,6 @@ const MainSection = ({ onRefresh }) => {
       )}
     </div>
   );
-};
+});
 
 export default MainSection;
