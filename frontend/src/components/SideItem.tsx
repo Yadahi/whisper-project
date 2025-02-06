@@ -19,11 +19,17 @@ const SideItem = ({ item, onDeleteProduct }) => {
         })
         .then((data) => {
           console.log("DATA", data);
+          const file = {
+            type: data.type,
+            size: data.size,
+            originalname: data.originalname,
+            filename: data.filename,
+          };
 
           contentDispatch({
             type: "SET_CONTENT",
             payload: {
-              file: data.file,
+              file: file,
               audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
               output: data.transcriptionData,
             },
@@ -53,7 +59,7 @@ const SideItem = ({ item, onDeleteProduct }) => {
   return (
     <li
       className={`sidepanel-item ${true ? "active" : ""}`}
-      // onClick={() => handleProductClick(_id)}
+      onClick={() => handleProductClick(_id)}
     >
       <Link to={`/item/${_id}`} className="item-link">
         <div>{title}</div>
