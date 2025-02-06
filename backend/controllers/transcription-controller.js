@@ -100,7 +100,7 @@ const getTranscriptionById = async (req, res, next) => {
       return next(error);
     }
 
-    const productItem = await Product.findById(productId);
+    const productItem = await Product.findById(productId).lean();
 
     if (!productItem) {
       const error = new Error("Product not found.");
@@ -108,15 +108,7 @@ const getTranscriptionById = async (req, res, next) => {
       return next(error);
     }
 
-    res.status(200).json({
-      ...productItem,
-      file: {
-        type: productItem.type,
-        size: productItem.size,
-        originalname: productItem.originalname,
-        filename: productItem.filename,
-      },
-    });
+    res.status(200).json(productItem);
   } catch (error) {
     next(error);
   }
