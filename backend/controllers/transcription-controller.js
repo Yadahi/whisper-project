@@ -83,11 +83,8 @@ const postFile = async (req, res, next) => {
 
 const getAllTranscriptions = async (req, res, next) => {
   try {
-    console.log("getAllTranscriptions user", req.user);
-
     const userId = req.user._id;
-    const products = await Product.findById(userId);
-    // const products = await Product.fetchAll(userId);
+    const products = await Product.find({ userId: userId });
     res.status(200).json(products);
   } catch (error) {
     next(error);
