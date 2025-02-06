@@ -6,7 +6,6 @@ const SideItem = ({ item, onDeleteProduct }) => {
   const { contentDispatch } = useContent();
 
   const handleProductClick = (id) => {
-    console.log("Product clicked", id);
     try {
       fetch(`http://localhost:3000/${id}`, {
         method: "GET",
@@ -18,20 +17,14 @@ const SideItem = ({ item, onDeleteProduct }) => {
           return response.json();
         })
         .then((data) => {
-          console.log("DATA", data);
-          const file = {
-            type: data.type,
-            size: data.size,
-            originalname: data.originalname,
-            filename: data.filename,
-          };
+          const { path, transcriptionData, ...file } = data;
 
           contentDispatch({
             type: "SET_CONTENT",
             payload: {
               file: file,
-              audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
-              output: data.transcriptionData,
+              audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${path}`,
+              output: transcriptionData,
             },
           });
         })
