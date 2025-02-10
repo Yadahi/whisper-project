@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import "./Title.css";
 
 type Props = {
   title: string;
@@ -63,8 +64,8 @@ const Title: FC<Props> = ({ title }) => {
   const getTitle = () => {
     if (isEditable || !currentTitle) {
       return (
-        <label htmlFor="title">
-          <span>Type title:</span>
+        <label htmlFor="title" className="title-label">
+          <span className="title-label-text">Type title:</span>
           <input
             ref={inputRef}
             type="text"

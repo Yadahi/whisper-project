@@ -203,34 +203,61 @@ const AudioPlayer = forwardRef(function AudioPlayer(props, ref) {
         />
       )}
 
-      <div>
-        <label htmlFor="time">Time</label>
+      {/* TODO style timer */}
+      <div className="time-input-container">
+        <label htmlFor="time" className="time-label">
+          Time
+        </label>
+
         {!!timeState.hours && (
-          <input
-            type="number"
-            name="hour"
-            min={0}
-            max={maxTime.hours}
-            value={timeState.hours}
-            onChange={handleHours}
-          />
+          <div className="time-group">
+            <label htmlFor="hours-input" className="time-small-label">
+              Hrs
+            </label>
+            <input
+              className="time-input"
+              type="number"
+              id="hours-input"
+              name="hours"
+              min={0}
+              max={maxTime.hours}
+              value={timeState.hours}
+              onChange={handleHours}
+            />
+          </div>
         )}
-        <input
-          type="number"
-          name="minutes"
-          min={0}
-          max={maxTime.minutes}
-          value={timeState.minutes}
-          onChange={handleMinutes}
-        />
-        <input
-          type="number"
-          name="seconds"
-          min={0}
-          max={maxTime.seconds}
-          value={timeState.seconds}
-          onChange={handleSeconds}
-        />
+
+        <div className="time-group">
+          <label htmlFor="minutes-input" className="time-small-label">
+            Min
+          </label>
+          <input
+            className="time-input"
+            type="number"
+            id="minutes-input"
+            name="minutes"
+            min={0}
+            max={maxTime.minutes}
+            value={timeState.minutes}
+            onChange={handleMinutes}
+          />
+        </div>
+        {":"}
+        <div className="time-group">
+          <label htmlFor="seconds-input" className="time-small-label">
+            Sec
+          </label>
+          <input
+            className="time-input"
+            type="number"
+            id="seconds-input"
+            name="seconds"
+            min={0}
+            max={maxTime.seconds}
+            value={timeState.seconds}
+            onChange={handleSeconds}
+          />
+        </div>
       </div>
     </div>
   );

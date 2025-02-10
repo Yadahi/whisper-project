@@ -4,6 +4,7 @@
   gap: 1rem;
   grid-template-areas:
     "search search search search"
+    "title-container title-container title-container title-container"
     "folder-container folder-container folder-container folder-container"
     "audio-player audio-player audio-player audio-player"
     "lines-container lines-container lines-container lines-container";
@@ -13,6 +14,13 @@
 
 .folder-container {
   grid-area: folder-container;
+  background: linear-gradient(
+    to bottom,
+    rgba(44, 44, 44, 0.75),
+    rgba(224, 224, 224, 0.15)
+  );
+  padding: 1rem;
+  border-radius: 8px;
 }
 
 .lines-container {

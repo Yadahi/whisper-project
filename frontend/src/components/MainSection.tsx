@@ -143,10 +143,10 @@ const MainSection = memo(({ onRefresh }) => {
         ref={audioPlayerRef}
       />
 
+      <Title title={file?.title} />
       <div className="folder-container">
         {loading && <div>LOADING</div>}
         <form ref={formRef} onSubmit={submitHandler}>
-          <Title title={file?.title} />
           <label htmlFor="audio-input">
             <input
               type="file"
