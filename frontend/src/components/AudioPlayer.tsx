@@ -18,6 +18,7 @@ import {
   useTimeDispatch,
 } from "../context/TimeContext";
 import { convertToTime } from "../util/helpers";
+import "./AudioPlayer.css";
 
 // TODO add type for ref
 type Props = {

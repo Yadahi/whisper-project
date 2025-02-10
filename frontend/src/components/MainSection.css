@@ -1,0 +1,20 @@
+.main {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  grid-template-areas:
+    "search search search search"
+    "folder-container folder-container folder-container folder-container"
+    "audio-player audio-player audio-player audio-player"
+    "lines-container lines-container lines-container lines-container";
+  grid-auto-rows: min-content;
+  padding: 2rem;
+}
+
+.folder-container {
+  grid-area: folder-container;
+}
+
+.lines-container {
+  grid-area: lines-container;
+}

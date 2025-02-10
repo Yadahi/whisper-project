@@ -35,7 +35,7 @@ const Search = () => {
   };
 
   return (
-    <div>
+    <div className="search-container">
       <input
         type="text"
         onChange={handleInputChange}

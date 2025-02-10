@@ -5,11 +5,15 @@ import Lines from "./Lines";
 import openSocket from "socket.io-client";
 import Search from "./Search";
 import { useParams } from "react-router";
+import Title from "./Title";
+import "./MainSection.css";
+
+// TODO detect click outside
 
 const MainSection = memo(({ onRefresh }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isEditable, setIsEditable] = useState(false);
+
   const audioPlayerRef = useRef(null);
   const formRef = useRef(null);
 
@@ -129,20 +133,6 @@ const MainSection = memo(({ onRefresh }) => {
     return <div className="error-message">{error}</div>;
   }
 
-  // TODO detect click outside
-  const title = () => {
-    if (isEditable || !file.title) {
-      return (
-        <label htmlFor="title">
-          Title
-          <input type="text" id="title" name="title" value={file.title} />
-        </label>
-      );
-    } else {
-      return <span onClick={() => setIsEditable(true)}>{file.title}</span>;
-    }
-  };
-
   return (
     <div className="main">
       <Search />
@@ -153,28 +143,28 @@ const MainSection = memo(({ onRefresh }) => {
         ref={audioPlayerRef}
       />
 
-      {loading && <div>LOADING</div>}
-      <form ref={formRef} onSubmit={submitHandler}>
-        {/* <label htmlFor="title">
-          Title
-          <input type="text" id="title" name="title" />
-        </label> */}
-        {title()}
-        <label htmlFor="audio-input">
-          <input
-            type="file"
-            id="audio-input"
-            name="audio"
-            onChange={handleAudioChange}
-          />
-        </label>
-        <button type="submit">Send</button>
-      </form>
-      {!!output && (
-        <div>
-          <Lines output={output} play={handlePlayFromTime} />
-        </div>
-      )}
+      <div className="folder-container">
+        {loading && <div>LOADING</div>}
+        <form ref={formRef} onSubmit={submitHandler}>
+          <Title title={file?.title} />
+          <label htmlFor="audio-input">
+            <input
+              type="file"
+              id="audio-input"
+              name="audio"
+              onChange={handleAudioChange}
+            />
+          </label>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+      <div className="lines-container">
+        {!!output && (
+          <div>
+            <Lines output={output} play={handlePlayFromTime} />
+          </div>
+        )}
+      </div>
     </div>
   );
 });
