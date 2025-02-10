@@ -37,8 +37,6 @@ app.use((req, res, next) => {
   User.findById("6779a0909acce51ff109fa5c")
     .then((user) => {
       req.user = user;
-      console.log("found user by id");
-
       next();
     })
     .catch((err) => {
@@ -60,7 +58,6 @@ app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
   }
-  console.log("test", error.message);
   res.status(error.code || 500);
   res.json({ message: error.message || "An unknown error occured!" });
 });
