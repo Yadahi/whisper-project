@@ -12,11 +12,16 @@ type Props = {
   title: string;
 };
 
+// TODO alternatively remove useState and use onTitleChange={(newTitle) => contentDispatch({ type: "SET_CONTENT", payload: { file: { ...file, title: newTitle } }  })}
 const Title: FC<Props> = ({ title }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setCurrentTitle(title);
+  }, [title]);
 
   // detect click outside
   useEffect(() => {
@@ -25,8 +30,6 @@ const Title: FC<Props> = ({ title }) => {
         inputRef.current &&
         !inputRef.current.contains(event.target as Node)
       ) {
-        console.log("test");
-
         setIsEditable(false);
         triggerTitleUpdate(currentTitle);
       }
@@ -56,7 +59,6 @@ const Title: FC<Props> = ({ title }) => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
-    setIsEditable(true);
     setCurrentTitle(newTitle);
     triggerTitleUpdate(newTitle);
   };

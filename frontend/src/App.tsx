@@ -20,6 +20,7 @@ const App = () => {
               path="/"
               element={<MainSection onRefresh={setRefreshFlag} />}
             />
+            {/* TODO create custom edit component */}
             <Route
               path="/item/:id"
               element={<MainSection onRefresh={setRefreshFlag} />}

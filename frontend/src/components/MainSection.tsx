@@ -132,6 +132,7 @@ const MainSection = memo(({ onRefresh }) => {
   if (error) {
     return <div className="error-message">{error}</div>;
   }
+  console.log("title", file?.title);
 
   return (
     <div className="main">
