@@ -136,28 +136,30 @@ const MainSection = memo(({ onRefresh }) => {
 
   return (
     <div className="main">
-      <Search />
-      <AudioPlayer
-        audioUrl={audioUrl}
-        file={file}
-        type={file?.type}
-        ref={audioPlayerRef}
-      />
+      <div className="content">
+        <Search />
+        <AudioPlayer
+          audioUrl={audioUrl}
+          file={file}
+          type={file?.type}
+          ref={audioPlayerRef}
+        />
 
-      <Title title={file?.title} />
-      <div className="folder-container">
-        {loading && <div>LOADING</div>}
-        <form ref={formRef} onSubmit={submitHandler}>
-          <label htmlFor="audio-input">
-            <input
-              type="file"
-              id="audio-input"
-              name="audio"
-              onChange={handleAudioChange}
-            />
-          </label>
-          <button type="submit">Send</button>
-        </form>
+        <Title title={file?.title} />
+        <div className="folder-container">
+          {loading && <div>LOADING</div>}
+          <form ref={formRef} onSubmit={submitHandler}>
+            <label htmlFor="audio-input">
+              <input
+                type="file"
+                id="audio-input"
+                name="audio"
+                onChange={handleAudioChange}
+              />
+            </label>
+            <button type="submit">Send</button>
+          </form>
+        </div>
       </div>
       <div className="lines-container">
         {!!output && (

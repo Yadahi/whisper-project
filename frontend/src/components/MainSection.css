@@ -1,17 +1,13 @@
 .main {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  grid-template-areas:
-    "search search search search"
-    "title-container title-container title-container title-container"
-    "folder-container folder-container folder-container folder-container"
-    "audio-player audio-player audio-player audio-player"
-    "lines-container lines-container lines-container lines-container";
+  grid-template-areas: "content lines-container";
   grid-auto-rows: min-content;
   padding: 2rem;
 }
 
+/* TODO remove grid areas */
 .folder-container {
   grid-area: folder-container;
   background: linear-gradient(

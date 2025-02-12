@@ -14,6 +14,7 @@ const App = () => {
     <div className="App">
       <TimeProvider>
         <ContentProvider>
+          {/* TODO add header */}
           <SidePanel refreshFlag={refreshFlag} />
           <Routes>
             <Route
