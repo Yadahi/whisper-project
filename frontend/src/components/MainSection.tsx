@@ -35,48 +35,49 @@ const MainSection = memo(({ onRefresh }) => {
     return () => socket.disconnect();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (!params.id) {
-  //       return;
-  //     }
+  useEffect(() => {
+    if (!params.id || state.currentId === params.id) {
+      return; // Don't refetch if we already have this data
+    }
 
-  //     setLoading(true); // Start loading
-  //     setError(null); // Clear previous errors
+    const fetchData = async () => {
+      setLoading(true); // Start loading
+      setError(null); // Clear previous errors
 
-  //     try {
-  //       const response = await fetch(`http://localhost:3000/${params.id}`);
+      try {
+        const response = await fetch(`http://localhost:3000/${params.id}`);
 
-  //       if (!response.ok) {
-  //         // Extract the error message from the response body
-  //         const errorData = await response.json();
-  //         throw new Error(
-  //           errorData.message || `HTTP error! Status: ${response.status}`
-  //         );
-  //       }
+        if (!response.ok) {
+          // Extract the error message from the response body
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || `HTTP error! Status: ${response.status}`
+          );
+        }
 
-  //       const data = await response.json();
+        const data = await response.json();
 
-  //       console.log("DATA", data);
+        console.log("DATA", data);
 
-  //       contentDispatch({
-  //         type: "SET_CONTENT",
-  //         payload: {
-  //           file: data.file,
-  //           audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
-  //           output: data.transcriptionData,
-  //         },
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error.message);
-  //       setError(error.message); // Use the error message from the backend
-  //     } finally {
-  //       setLoading(false); // Stop loading
-  //     }
-  //   };
+        contentDispatch({
+          type: "SET_CONTENT",
+          payload: {
+            file: data.file,
+            audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
+            output: data.transcriptionData,
+            currentId: params.id,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+        setError(error.message); // Use the error message from the backend
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
 
-  //   fetchData();
-  // }, [params.id]);
+    fetchData();
+  }, [params.id, state.currentId]);
 
   const handleAudioChange = (e) => {
     const selectedFile = e.target.files[0];
