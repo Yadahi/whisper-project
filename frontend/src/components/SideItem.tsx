@@ -25,6 +25,7 @@ const SideItem = ({ item, onDeleteProduct }) => {
               file: file,
               audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${path}`,
               output: transcriptionData,
+              currentId: id,
             },
           });
         })

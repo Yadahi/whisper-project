@@ -8,6 +8,7 @@ const initialState = {
   file: null,
   audioUrl: "",
   output: [],
+  id: "",
 };
 
 const contentReducer = (state, action) => {
