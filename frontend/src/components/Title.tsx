@@ -9,7 +9,7 @@ import {
 import "./Title.css";
 
 type Props = {
-  title: string;
+  title: string | null;
 };
 
 // TODO alternatively remove useState and use onTitleChange={(newTitle) => contentDispatch({ type: "SET_CONTENT", payload: { file: { ...file, title: newTitle } }  })}
@@ -18,9 +18,12 @@ const Title: FC<Props> = ({ title }) => {
   const [currentTitle, setCurrentTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isUserEditing = useRef(false);
 
   useEffect(() => {
-    setCurrentTitle(title);
+    if (!isUserEditing.current && currentTitle && currentTitle.trim() !== "") {
+      setCurrentTitle(title);
+    }
   }, [title]);
 
   // detect click outside
@@ -30,8 +33,12 @@ const Title: FC<Props> = ({ title }) => {
         inputRef.current &&
         !inputRef.current.contains(event.target as Node)
       ) {
-        setIsEditable(false);
-        triggerTitleUpdate(currentTitle);
+        // Only exit edit mode if we have a non-empty title
+        if (currentTitle && currentTitle.trim() !== "") {
+          setIsEditable(false);
+          isUserEditing.current = false;
+          triggerTitleUpdate(currentTitle);
+        }
       }
     };
 
@@ -46,6 +53,13 @@ const Title: FC<Props> = ({ title }) => {
     };
   }, [isEditable, currentTitle]);
 
+  // Focus input when entering edit mode
+  useEffect(() => {
+    if (isEditable && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditable]);
+
   //   TODO send update request to update title
   const triggerTitleUpdate = useCallback((newTitle: string) => {
     if (debounceTimeout.current) {
@@ -58,9 +72,13 @@ const Title: FC<Props> = ({ title }) => {
   }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log("handleInputChange");
+
     const newTitle = e.target.value;
+    setIsEditable(true);
     setCurrentTitle(newTitle);
-    triggerTitleUpdate(newTitle);
+    isUserEditing.current = true;
+    // triggerTitleUpdate(newTitle);
   };
 
   const getTitle = () => {
@@ -73,7 +91,7 @@ const Title: FC<Props> = ({ title }) => {
             type="text"
             id="title"
             name="title"
-            value={currentTitle}
+            value={currentTitle ?? ""}
             onChange={handleInputChange}
           />
         </label>
