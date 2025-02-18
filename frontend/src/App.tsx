@@ -6,6 +6,7 @@ import MainSection from "./components/MainSection";
 import "./App.css";
 import { Route, Routes } from "react-router";
 import NotFoundPage from "./components/NotFoundPage";
+import UploadPage from "./components/UploadPage";
 
 const App = () => {
   const [refreshFlag, setRefreshFlag] = useState(false);
@@ -19,7 +20,7 @@ const App = () => {
           <Routes>
             <Route
               path="/"
-              element={<MainSection onRefresh={setRefreshFlag} />}
+              element={<UploadPage onRefresh={setRefreshFlag} />}
             />
             {/* TODO create custom edit component */}
             <Route
