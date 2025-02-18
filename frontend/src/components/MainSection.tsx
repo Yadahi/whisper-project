@@ -56,15 +56,14 @@ const MainSection = memo(({ onRefresh }) => {
         }
 
         const data = await response.json();
-
-        console.log("DATA", data);
+        const { _id, path, transcriptionData, ...file } = data;
 
         contentDispatch({
           type: "SET_CONTENT",
           payload: {
-            file: data.file,
-            audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${data.path}`,
-            output: data.transcriptionData,
+            file: file,
+            audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${path}`,
+            output: transcriptionData,
             currentId: params.id,
           },
         });
@@ -79,50 +78,6 @@ const MainSection = memo(({ onRefresh }) => {
     fetchData();
   }, [params.id, state.currentId]);
 
-  const handleAudioChange = (e) => {
-    const selectedFile = e.target.files[0];
-
-    if (selectedFile) {
-      const fileUrl = URL.createObjectURL(selectedFile);
-      contentDispatch({
-        type: "SET_CONTENT",
-        payload: { audioUrl: fileUrl, file: selectedFile, output: [] },
-      });
-    }
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const formData = new FormData();
-
-    formData.append("title", e.target.title.value);
-    formData.append("audio", file);
-
-    fetch("http://localhost:3000/", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch transcription");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setLoading(false);
-        onRefresh((prev) => !prev);
-
-        if (formRef.current) {
-          formRef.current.reset();
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        throw error;
-      });
-  };
-
   const handlePlayFromTime = (seconds) => {
     if (audioPlayerRef.current) {
       audioPlayerRef.current?.play();
@@ -133,7 +88,6 @@ const MainSection = memo(({ onRefresh }) => {
   if (error) {
     return <div className="error-message">{error}</div>;
   }
-  console.log("title", file?.title);
 
   return (
     <div className="main">
@@ -147,20 +101,6 @@ const MainSection = memo(({ onRefresh }) => {
         />
 
         <Title title={file?.title} />
-        <div className="folder-container">
-          {loading && <div>LOADING</div>}
-          <form ref={formRef} onSubmit={submitHandler}>
-            <label htmlFor="audio-input">
-              <input
-                type="file"
-                id="audio-input"
-                name="audio"
-                onChange={handleAudioChange}
-              />
-            </label>
-            <button type="submit">Send</button>
-          </form>
-        </div>
       </div>
       <div className="lines-container">
         {!!output && (
