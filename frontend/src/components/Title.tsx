@@ -18,12 +18,9 @@ const Title: FC<Props> = ({ title }) => {
   const [currentTitle, setCurrentTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isUserEditing = useRef(false);
 
   useEffect(() => {
-    if (!isUserEditing.current && currentTitle && currentTitle.trim() !== "") {
-      setCurrentTitle(title);
-    }
+    setCurrentTitle(title);
   }, [title]);
 
   // detect click outside
@@ -33,10 +30,10 @@ const Title: FC<Props> = ({ title }) => {
         inputRef.current &&
         !inputRef.current.contains(event.target as Node)
       ) {
+        // TODO might be different, it wont trigger when empty
         // Only exit edit mode if we have a non-empty title
         if (currentTitle && currentTitle.trim() !== "") {
           setIsEditable(false);
-          isUserEditing.current = false;
           triggerTitleUpdate(currentTitle);
         }
       }
@@ -72,13 +69,10 @@ const Title: FC<Props> = ({ title }) => {
   }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("handleInputChange");
-
     const newTitle = e.target.value;
     setIsEditable(true);
     setCurrentTitle(newTitle);
-    isUserEditing.current = true;
-    // triggerTitleUpdate(newTitle);
+    triggerTitleUpdate(newTitle);
   };
 
   const getTitle = () => {
