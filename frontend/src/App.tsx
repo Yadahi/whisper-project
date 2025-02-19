@@ -7,6 +7,7 @@ import "./App.css";
 import { Route, Routes } from "react-router";
 import NotFoundPage from "./components/NotFoundPage";
 import UploadPage from "./components/UploadPage";
+import Header from "./components/Header";
 
 const App = () => {
   const [refreshFlag, setRefreshFlag] = useState(false);
@@ -16,19 +17,22 @@ const App = () => {
       <TimeProvider>
         <ContentProvider>
           {/* TODO add header */}
-          <SidePanel refreshFlag={refreshFlag} />
-          <Routes>
-            <Route
-              path="/"
-              element={<UploadPage onRefresh={setRefreshFlag} />}
-            />
-            {/* TODO create custom edit component */}
-            <Route
-              path="/item/:id"
-              element={<MainSection onRefresh={setRefreshFlag} />}
-            />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <Header />
+          <div className="main-content">
+            <SidePanel refreshFlag={refreshFlag} />
+            <Routes>
+              <Route
+                path="/"
+                element={<UploadPage onRefresh={setRefreshFlag} />}
+              />
+              {/* TODO create custom edit component */}
+              <Route
+                path="/item/:id"
+                element={<MainSection onRefresh={setRefreshFlag} />}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </div>
         </ContentProvider>
       </TimeProvider>
     </div>
