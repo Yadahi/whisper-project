@@ -10,7 +10,7 @@ import "./MainSection.css";
 
 // TODO detect click outside
 
-const MainSection = memo(({ onRefresh }) => {
+const MainSection = memo(() => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -53,9 +53,9 @@ const MainSection = memo(({ onRefresh }) => {
         });
       } catch (error) {
         console.error("Error fetching data:", error.message);
-        setError(error.message); // Use the error message from the backend
+        setError(error.message);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 
@@ -72,6 +72,10 @@ const MainSection = memo(({ onRefresh }) => {
 
   if (error) {
     return <div className="error-message">{error}</div>;
+  }
+
+  if (loading) {
+    return <div>LOADING</div>;
   }
 
   return (

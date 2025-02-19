@@ -69,7 +69,7 @@ const postFile = async (req, res, next) => {
         // product.set("transcriptionData", transcriptionChunks);
         product.transcriptionData = transcriptionChunks;
         await product.save();
-        res.status(200).json({ product });
+        res.status(200).json(product.toObject());
       } else {
         const error = new Error("Failed to process the audio file");
         error.code = 500;

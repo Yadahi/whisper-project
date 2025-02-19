@@ -49,8 +49,8 @@ const UploadPage = ({ onRefresh }) => {
 
       if (!response.ok) throw new Error("Upload failed");
       const data = await response.json();
-      //   TODO the data.product is stupid
-      const { _id, path, transcriptionData, ...file } = data.product;
+
+      const { _id, path, transcriptionData, ...file } = data;
 
       contentDispatch({
         type: "SET_CONTENT",
@@ -72,7 +72,6 @@ const UploadPage = ({ onRefresh }) => {
   };
 
   const handleUploadFile = (e: ChangeEvent) => {
-    console.log(e);
     setIsDisabled(!e.target.files[0]);
   };
 
