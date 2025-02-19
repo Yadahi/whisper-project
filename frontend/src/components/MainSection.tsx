@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { useContent } from "../context/ContentContext";
 import AudioPlayer from "./AudioPlayer";
 import Lines from "./Lines";
-import openSocket from "socket.io-client";
+
 import Search from "./Search";
 import { useParams } from "react-router";
 import Title from "./Title";
@@ -15,40 +15,24 @@ const MainSection = memo(({ onRefresh }) => {
   const [error, setError] = useState(null);
 
   const audioPlayerRef = useRef(null);
-  const formRef = useRef(null);
 
   const { state, contentDispatch } = useContent();
-  const { file, audioUrl, output } = state;
+  const { file, audioUrl, output, id } = state;
   const params = useParams();
 
   useEffect(() => {
-    const socket = openSocket("http://localhost:3000");
-    socket.on("transcription", (data) => {
-      const line = data.parsedLine;
-
-      contentDispatch({
-        type: "ADD_LINE",
-        payload: line,
-      });
-    });
-
-    return () => socket.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!params.id || state.currentId === params.id) {
-      return; // Don't refetch if we already have this data
+    if (!params.id || id === params.id) {
+      return;
     }
 
     const fetchData = async () => {
-      setLoading(true); // Start loading
-      setError(null); // Clear previous errors
+      setLoading(true);
+      setError(null);
 
       try {
         const response = await fetch(`http://localhost:3000/${params.id}`);
 
         if (!response.ok) {
-          // Extract the error message from the response body
           const errorData = await response.json();
           throw new Error(
             errorData.message || `HTTP error! Status: ${response.status}`
@@ -64,7 +48,7 @@ const MainSection = memo(({ onRefresh }) => {
             file: file,
             audioUrl: `${import.meta.env.VITE_APP_ASSET_URL}/${path}`,
             output: transcriptionData,
-            currentId: params.id,
+            id: params.id,
           },
         });
       } catch (error) {
@@ -76,8 +60,9 @@ const MainSection = memo(({ onRefresh }) => {
     };
 
     fetchData();
-  }, [params.id, state.currentId]);
+  }, [params.id, id]);
 
+  // TODO revise if it is necessary
   const handlePlayFromTime = (seconds) => {
     if (audioPlayerRef.current) {
       audioPlayerRef.current?.play();
@@ -99,7 +84,6 @@ const MainSection = memo(({ onRefresh }) => {
           type={file?.type}
           ref={audioPlayerRef}
         />
-
         <Title title={file?.title} />
       </div>
       <div className="lines-container">
